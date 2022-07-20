@@ -2,7 +2,7 @@
   <img src="https://content.luca-kiebel.de/websites/nibyou.de/img/NIBYOU%20logo%20and%20claim%20-%20digital%20-%20big.png" alt="Nibyou Logo">
 </p>
 
-# Nibyou Microservice
+# Nibyou Profile Microservice
 
 ## Installation
 
@@ -44,4 +44,4 @@ $ npm run test:cov
 
 ## License
 
-The Nibyou Microservice is licensed under the [AGPL-3 license](LICENSE).
+The Nibyou Profile Microservice is licensed under the [AGPL-3 license](LICENSE).
