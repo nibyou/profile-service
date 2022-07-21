@@ -32,7 +32,12 @@ export class AppService {
       .setData({ uptime: asTimeString(process.uptime()) });
   }
 
-  async createPresignedImageUrl(fileExtension: string): Promise<S3UrlResponse> {
+  async createPresignedImageUrl(
+    fileExtension: string,
+    bucketName?: string,
+  ): Promise<S3UrlResponse> {
+    bucketName = bucketName || process.env.S3_BUCKET;
+
     const minioClient = new Client({
       endPoint: process.env.S3_BASE_URL,
       port: parseInt(process.env.S3_PORT),
@@ -44,14 +49,14 @@ export class AppService {
     const uid = uuid();
 
     const upload = await minioClient.presignedPutObject(
-      process.env.S3_BUCKET,
+      bucketName,
       `${uid}.${fileExtension}`,
       60,
     );
 
     return {
       upload,
-      download: `https://${process.env.S3_BASE_URL}/${process.env.S3_BUCKET}/${uid}.${fileExtension}`,
+      download: `https://${process.env.S3_BASE_URL}/${bucketName}/${uid}.${fileExtension}`,
     } as S3UrlResponse;
   }
 }

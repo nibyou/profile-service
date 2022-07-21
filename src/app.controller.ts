@@ -36,7 +36,10 @@ export class AppController {
       RealmRoles.ADMIN,
     ],
   })
-  createPresignedImageUrl(@Query('ext') ext: string) {
-    return this.appService.createPresignedImageUrl(ext);
+  createPresignedImageUrl(
+    @Query('ext') ext: string,
+    @Query('bucket') bucket: string,
+  ): Promise<S3UrlResponse> {
+    return this.appService.createPresignedImageUrl(ext, bucket);
   }
 }
