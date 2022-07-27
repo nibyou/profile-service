@@ -36,7 +36,9 @@ export class AppService {
     fileExtension: string,
     bucketName?: string,
   ): Promise<S3UrlResponse> {
-    bucketName = bucketName || process.env.S3_BUCKET;
+    if (!bucketName || !bucketName.startsWith('profile')) {
+      bucketName = process.env.S3_BUCKET_NAME;
+    }
 
     const minioClient = new Client({
       endPoint: process.env.S3_BASE_URL,
