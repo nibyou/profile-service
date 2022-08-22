@@ -9,7 +9,17 @@ import {
 } from '@nestjs/common';
 import { PracticeService } from './practice.service';
 import { CreatePracticeDto } from './dto/create-practice.dto';
-import { UpdatePracticeDto } from './dto/update-practice.dto';
+import {
+  UpdatePracticeAddAdminDto,
+  UpdatePracticeAddressDto,
+  UpdatePracticeDto,
+  UpdatePracticeEmailDto,
+  UpdatePracticeLogoDto,
+  UpdatePracticeMobileNumberDto,
+  UpdatePracticeNameDto,
+  UpdatePracticeRemoveAdminDto,
+  UpdatePracticeWebsiteDto,
+} from './dto/update-practice.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -19,7 +29,14 @@ import {
 } from '@nestjs/swagger';
 import { Practice } from './schemata/practice.schema';
 import { AuthenticatedUser, Roles } from 'nest-keycloak-connect';
-import { AuthUser, RealmRoles } from '@nibyou/types';
+import {
+  AuthUser,
+  CreateRequest,
+  DeleteRequest,
+  RealmRoles,
+  UpdateRequest,
+} from '@nibyou/types';
+import { AuthOperation } from '../operation.decorator';
 
 @ApiTags('practices')
 @ApiBearerAuth()
@@ -28,17 +45,14 @@ export class PracticeController {
   constructor(private readonly practiceService: PracticeService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new practice' })
+  @AuthOperation(
+    [RealmRoles.USER_PRACTITIONER, RealmRoles.ADMIN],
+    'Create new Practice',
+    'createPractice',
+  )
   @ApiCreatedResponse({
     description: 'The practice has been successfully created.',
     type: Practice,
-  })
-  @Roles({
-    roles: [
-      RealmRoles.USER_PRACTITIONER,
-      RealmRoles.BACKEND_SERVICE,
-      RealmRoles.ADMIN,
-    ],
   })
   create(
     @Body() createPracticeDto: CreatePracticeDto,
@@ -85,6 +99,126 @@ export class PracticeController {
     @Body() updatePracticeDto: UpdatePracticeDto,
   ) {
     return this.practiceService.update(id, updatePracticeDto);
+  }
+
+  @UpdateRequest({
+    description: 'Updated the practices contact email',
+    path: ':id/email',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Update the practices contact email',
+  })
+  updateEmail(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeEmailDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.updateEmail(id, dto, user);
+  }
+
+  @UpdateRequest({
+    description: 'Updated the practices address',
+    path: ':id/address',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Update the practices contact address',
+  })
+  updateAddress(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeAddressDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.updateAddress(id, dto, user);
+  }
+
+  @UpdateRequest({
+    description: 'Updated the practices name',
+    path: ':id/name',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Update the practices name',
+  })
+  updateName(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeNameDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.updateName(id, dto, user);
+  }
+
+  @UpdateRequest({
+    description: 'Updated the practices Website',
+    path: ':id/website',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Update the practices Website',
+  })
+  updateWebsite(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeWebsiteDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.updateWebsite(id, dto, user);
+  }
+
+  @UpdateRequest({
+    description: 'Updated the practices contact mobile number',
+    path: ':id/mobile-number',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Update the practices contact mobile number',
+  })
+  updateMobileNumber(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeMobileNumberDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.updateMobileNumber(id, dto, user);
+  }
+
+  @CreateRequest({
+    description: 'Added a new Admin to the practice',
+    path: ':id/admin',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Add a new Admin to the practice',
+  })
+  addAdmin(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeAddAdminDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.addAdmin(id, dto, user);
+  }
+
+  @DeleteRequest({
+    description: 'Removed an Admin from the practice',
+    path: ':id/admin',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Remove an Admin from the practice',
+  })
+  removeAdmin(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeRemoveAdminDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.removeAdmin(id, dto, user);
+  }
+
+  @UpdateRequest({
+    description: 'Updated the practices logo',
+    path: ':id/logo',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Update the practices logo',
+  })
+  updateLogo(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeLogoDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.updateLogo(id, dto, user);
   }
 
   @Delete(':id')
