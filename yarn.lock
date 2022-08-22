@@ -690,7 +690,7 @@
 
 "@nibyou/types@^1.5.0":
   version "1.5.0"
-  resolved "https://registry.npmjs.org/@nibyou/types/-/types-1.5.0.tgz"
+  resolved "https://registry.yarnpkg.com/@nibyou/types/-/types-1.5.0.tgz#a76accd895e845fc83f2da288c2e3b7e624a1b71"
   integrity sha512-/2dvdn9VcM8Vy4vuBrb3UJ+o/tJlpHo8v1UzkTuNwl4DuOX7738nw3g6+DEfCmhI0lOaXLUEPouVAL5OdUfw6Q==
   dependencies:
     "@nestjs/swagger" "^5.2.1"
