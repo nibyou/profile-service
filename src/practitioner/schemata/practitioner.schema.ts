@@ -47,7 +47,9 @@ export class PractitionerData {
   @Prop()
   lastName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: () => [Qualification],
+  })
   @Prop({ type: () => [Qualification] })
   careerPath: Qualification[];
 }
