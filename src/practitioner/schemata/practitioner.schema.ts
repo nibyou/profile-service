@@ -68,7 +68,9 @@ export class Practitioner {
   @ApiProperty()
   status: GlobalStatus;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: () => [Practice],
+  })
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Practice' }] })
   practices: Practice[];
 
