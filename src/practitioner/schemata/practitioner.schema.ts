@@ -78,6 +78,13 @@ export class Practitioner {
   @ApiProperty()
   profileImage: string;
 
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  @ApiProperty()
+  qualificationsAccepted: boolean;
+
   @ApiProperty({
     type: String,
     format: 'uuid',

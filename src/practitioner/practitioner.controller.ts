@@ -100,7 +100,7 @@ export class PractitionerController {
     @Param('id') id: string,
     @Body() updatePractitionerDto: UpdatePractitionerDto,
   ) {
-    return this.practitionerService.update(+id, updatePractitionerDto);
+    return this.practitionerService.update(id, updatePractitionerDto);
   }
 
   @Delete(':id')

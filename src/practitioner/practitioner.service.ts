@@ -47,8 +47,8 @@ export class PractitionerService {
     });
   }
 
-  update(id: number, updatePractitionerDto: UpdatePractitionerDto) {
-    return `This action updates a #${id} practitioner`;
+  update(id: string, updatePractitionerDto: UpdatePractitionerDto) {
+    return this.practitionerModel.updateOne({ _id: id }, updatePractitionerDto);
   }
 
   remove(id: string) {
