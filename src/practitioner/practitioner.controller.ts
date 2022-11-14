@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { PractitionerService } from './practitioner.service';
 import { CreatePractitionerDto } from './dto/create-practitioner.dto';
-import { UpdatePractitionerDto } from './dto/update-practitioner.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -21,6 +20,7 @@ import {
 import { Practitioner } from './schemata/practitioner.schema';
 import { Roles } from 'nest-keycloak-connect';
 import { RealmRoles } from '@nibyou/types';
+import { UpdateQuery } from 'mongoose';
 
 @ApiBearerAuth()
 @ApiTags('practitioners')
@@ -98,7 +98,7 @@ export class PractitionerController {
   @Roles({ roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER] })
   update(
     @Param('id') id: string,
-    @Body() updatePractitionerDto: UpdatePractitionerDto,
+    @Body() updatePractitionerDto: UpdateQuery<Practitioner>,
   ) {
     return this.practitionerService.update(id, updatePractitionerDto);
   }
