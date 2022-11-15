@@ -3,7 +3,7 @@ import { CreatePractitionerDto } from './dto/create-practitioner.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Practitioner, PractitionerData } from './schemata/practitioner.schema';
-import { UpdateQuery } from 'mongoose';
+import { UpdatePractitionerDto } from './dto/update-practitioner.dto';
 
 @Injectable()
 export class PractitionerService {
@@ -47,7 +47,7 @@ export class PractitionerService {
     });
   }
 
-  update(id: string, updatePractitionerDto: UpdateQuery<Practitioner>) {
+  update(id: string, updatePractitionerDto: UpdatePractitionerDto) {
     return this.practitionerModel.findOneAndUpdate(
       { _id: id },
       updatePractitionerDto,
