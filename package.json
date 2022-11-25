@@ -29,7 +29,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.2.1",
     "@nibyou/keycloak": "^1.0.0",
-    "@nibyou/types": "^1.5.0",
+    "@nibyou/types": "^2.1.0",
     "@types/minio": "^7.0.13",
     "@types/mongoose": "^5.11.97",
     "dotenv": "^16.0.0",

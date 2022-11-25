@@ -46,7 +46,11 @@ export class PracticeController {
 
   @Post()
   @AuthOperation(
-    [RealmRoles.USER_PRACTITIONER, RealmRoles.ADMIN],
+    [
+      RealmRoles.USER_PRACTITIONER,
+      RealmRoles.ADMIN,
+      RealmRoles.USER_PRACTITIONER_PENDING,
+    ],
     'Create new Practice',
     'createPractice',
   )

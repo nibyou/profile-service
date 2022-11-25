@@ -1,11 +1,11 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { PractitionerService } from './practitioner.service';
 import { CreatePractitionerDto } from './dto/create-practitioner.dto';
@@ -37,6 +37,7 @@ export class PractitionerController {
   @Roles({
     roles: [
       RealmRoles.USER_PRACTITIONER,
+      RealmRoles.USER_PRACTITIONER_PENDING,
       RealmRoles.BACKEND_SERVICE,
       RealmRoles.ADMIN,
     ],

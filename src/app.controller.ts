@@ -33,6 +33,7 @@ export class AppController {
     roles: [
       RealmRoles.USER_PATIENT,
       RealmRoles.USER_PRACTITIONER,
+      RealmRoles.USER_PRACTITIONER_PENDING,
       RealmRoles.ADMIN,
     ],
   })
