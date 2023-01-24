@@ -70,6 +70,7 @@ export class ProfileController {
       RealmRoles.ADMIN,
       RealmRoles.USER_PRACTITIONER,
       RealmRoles.USER_PATIENT,
+      RealmRoles.BACKEND_SERVICE,
     ],
   })
   findOne(@Param('id') id: string) {

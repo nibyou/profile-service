@@ -68,6 +68,7 @@ export class PractitionerController {
       RealmRoles.ADMIN,
       RealmRoles.USER_PATIENT,
       RealmRoles.USER_PRACTITIONER,
+      RealmRoles.BACKEND_SERVICE,
     ],
   })
   findOne(@Param('id') id: string) {
