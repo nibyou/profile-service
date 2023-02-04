@@ -86,8 +86,8 @@ export class ProfileService {
     const response = await fetch(`https://geocode.maps.co/search?q=${address}`);
     const json = await response.json();
     console.log(json);
-    const lat = json[0].lat;
-    const lon = json[0].lon;
+    const lat = parseFloat(json[0].lat);
+    const lon = parseFloat(json[0].lon);
     return {
       lat,
       lon,
