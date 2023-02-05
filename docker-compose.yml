@@ -1,6 +1,6 @@
 services:
   node:
-    container_name: node
+    container_name: profile-service
     build:
       context: .
       dockerfile: Dockerfile
