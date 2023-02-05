@@ -15,8 +15,8 @@ import { Model } from 'mongoose';
 import { Practice } from './schemata/practice.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Address } from '../profile/schemata/profile.schema';
-import fetch from 'node-fetch';
 import { AuthUser } from '@nibyou/types';
+import axios from 'axios';
 
 @Injectable()
 export class PracticeService {
@@ -195,8 +195,10 @@ export class PracticeService {
   private static async getGeoLocation(
     address: string,
   ): Promise<{ lat: number; lon: number }> {
-    const response = await fetch(`https://geocode.maps.co/search?q=${address}`);
-    const json = await response.json();
+    const response = await axios.get(
+      `https://geocode.maps.co/search?q=${address}`,
+    );
+    const json = response.data;
     const lat = parseFloat(json[0].lat);
     const lon = parseFloat(json[0].lon);
     return {
