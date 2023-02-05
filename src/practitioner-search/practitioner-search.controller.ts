@@ -1,6 +1,6 @@
-import { Body, Controller, HttpCode } from '@nestjs/common';
+import { Body, Controller, HttpCode, Query } from '@nestjs/common';
 import { PractitionerSearchService } from './practitioner-search.service';
-import { CreateRequest } from '@nibyou/types';
+import { CreateRequest, ReadRequest } from '@nibyou/types';
 import {
   GeolocationDto,
   GetGeolocationDto,
@@ -9,6 +9,10 @@ import {
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { Practice } from '../practice/schemata/practice.schema';
 import { GeoLocation } from '../profile/schemata/profile.schema';
+import {
+  GetIcd10SearchResultDto,
+  Icd10SearchDto,
+} from './dto/icd10-search.dto';
 
 export class Dist {
   @ApiProperty()
@@ -56,5 +60,17 @@ export class PractitionerSearchController {
       dto.limit,
       dto.skip,
     );
+  }
+
+  @ReadRequest({
+    path: '/icd10match',
+    operationId: 'icd10match',
+    roles: false,
+    summary: 'Get ICD 10 matches by fuzzy search',
+    returnType: Icd10SearchDto,
+  })
+  @HttpCode(200)
+  getIcdReq(@Query() q: GetIcd10SearchResultDto) {
+    return this.practitionerSearchService.fuzzySearchICD10(q.search, q.limit);
   }
 }

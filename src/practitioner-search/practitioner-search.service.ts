@@ -6,6 +6,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { Practice } from '../practice/schemata/practice.schema';
+import Fuse from 'fuse.js';
+import * as fs from 'node:fs/promises';
+import { Icd10SearchDto, ICD10SearchResult } from './dto/icd10-search.dto';
 
 export type GL = { type: 'Point'; coordinates: [number, number] };
 
@@ -61,5 +64,37 @@ export class PractitionerSearchService {
 
     console.log(pipeline);
     return this.practiceModel.aggregate(pipeline);
+  }
+
+  async fuzzySearchICD10(
+    search: string,
+    limit: number,
+  ): Promise<Icd10SearchDto> {
+    const options = {
+      includeScore: true,
+      keys: ['code', 'name'],
+    };
+
+    console.log('fuse:', Fuse);
+
+    const icd10 = JSON.parse(
+      await fs.readFile(__dirname + '/data/icd10gm_code_name.json', {
+        encoding: 'utf-8',
+      }),
+    );
+
+    const index = Fuse.parseIndex(
+      JSON.parse(
+        await fs.readFile(__dirname + '/data/fuse-index.json', {
+          encoding: 'utf-8',
+        }),
+      ),
+    );
+
+    const fuse = new Fuse(icd10, options, index);
+
+    return {
+      results: fuse.search(search).slice(0, limit) as ICD10SearchResult[],
+    };
   }
 }
