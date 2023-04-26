@@ -10,7 +10,9 @@ import {
 import { PracticeService } from './practice.service';
 import { CreatePracticeDto } from './dto/create-practice.dto';
 import {
+  AddRatingDto,
   UpdatePracticeAddAdminDto,
+  UpdatePracticeAddMarketingInformationDto,
   UpdatePracticeAddressDto,
   UpdatePracticeDto,
   UpdatePracticeEmailDto,
@@ -69,6 +71,7 @@ export class PracticeController {
   @ApiOperation({ summary: 'Get all practices' })
   @ApiOkResponse({
     description: 'The practices have been successfully returned.',
+    type: [Practice],
   })
   @Roles({ roles: [RealmRoles.ADMIN] })
   findAll() {
@@ -79,6 +82,7 @@ export class PracticeController {
   @ApiOperation({ summary: 'Get a practice' })
   @ApiOkResponse({
     description: 'The practice has been successfully returned.',
+    type: Practice,
   })
   @Roles({
     roles: [
@@ -96,6 +100,7 @@ export class PracticeController {
   @ApiOperation({ summary: 'Update a practice' })
   @ApiOkResponse({
     description: 'The practice has been successfully updated.',
+    type: Practice,
   })
   @Roles({ roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER] })
   update(
@@ -223,6 +228,36 @@ export class PracticeController {
     @AuthenticatedUser() user: AuthUser,
   ) {
     return this.practiceService.updateLogo(id, dto, user);
+  }
+
+  @UpdateRequest({
+    description: 'Add Marketing Information to practice',
+    path: ':id/marketing',
+    returnType: Practice,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PRACTITIONER],
+    summary: 'Add Marketing Information',
+  })
+  addMarketing(
+    @Param('id') id: string,
+    @Body() dto: UpdatePracticeAddMarketingInformationDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.addMarketing(id, dto, user);
+  }
+
+  @CreateRequest({
+    description: 'Add a new Rating to a practice',
+    path: ':id/rating',
+    returnType: Number,
+    roles: [RealmRoles.ADMIN, RealmRoles.USER_PATIENT],
+    summary: 'Add a new Rating',
+  })
+  async addRating(
+    @Param('id') id: string,
+    @Body() dto: AddRatingDto,
+    @AuthenticatedUser() user: AuthUser,
+  ) {
+    return this.practiceService.addRating(id, dto, user);
   }
 
   @Delete(':id')

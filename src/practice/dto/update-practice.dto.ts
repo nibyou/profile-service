@@ -1,5 +1,7 @@
 import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { CreatePracticeDto } from './create-practice.dto';
+import { ICD10Item } from '../schemata/practice.schema';
+import { Address } from '../../profile/schemata/profile.schema';
 
 export class UpdatePracticeDto extends PartialType(CreatePracticeDto) {}
 
@@ -54,3 +56,22 @@ export class UpdatePracticeAddAdminDto {
 }
 
 export class UpdatePracticeRemoveAdminDto extends UpdatePracticeAddAdminDto {}
+
+export class UpdatePracticeAddMarketingInformationDto {
+  @ApiPropertyOptional()
+  description: string;
+
+  @ApiPropertyOptional()
+  icd10: ICD10Item[];
+
+  @ApiPropertyOptional()
+  additionalTherapyTopics: string;
+
+  @ApiPropertyOptional()
+  additionalAddresses: Address[];
+}
+
+export class AddRatingDto {
+  @ApiProperty()
+  stars: number;
+}

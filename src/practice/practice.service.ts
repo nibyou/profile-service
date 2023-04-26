@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePracticeDto } from './dto/create-practice.dto';
 import {
+  AddRatingDto,
   UpdatePracticeAddAdminDto,
+  UpdatePracticeAddMarketingInformationDto,
   UpdatePracticeAddressDto,
   UpdatePracticeDto,
   UpdatePracticeEmailDto,
@@ -12,7 +14,7 @@ import {
   UpdatePracticeWebsiteDto,
 } from './dto/update-practice.dto';
 import { Model } from 'mongoose';
-import { Practice } from './schemata/practice.schema';
+import { Practice, PracticeAddressTypes } from './schemata/practice.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Address } from '../profile/schemata/profile.schema';
 import { AuthUser } from '@nibyou/types';
@@ -32,6 +34,7 @@ export class PracticeService {
       zipCode: createPracticeDto.zipCode,
       houseNumber: createPracticeDto.houseNumber,
       location: null,
+      label: PracticeAddressTypes.MAIN,
     };
 
     const geoLocation = await PracticeService.getGeoLocation(
@@ -116,6 +119,7 @@ export class PracticeService {
       zipCode: dto.zipCode,
       houseNumber: dto.houseNumber,
       location: null,
+      label: PracticeAddressTypes.MAIN,
     };
 
     const geoLocation = await PracticeService.getGeoLocation(
@@ -186,6 +190,54 @@ export class PracticeService {
     }
     practice.logo = dto.logo;
     return practice.save();
+  }
+
+  async addMarketing(
+    id: string,
+    dto: UpdatePracticeAddMarketingInformationDto,
+    user: AuthUser,
+  ) {
+    const practice = await this.practiceModel.findById(id);
+    if (!AuthUser.isAdmin(user) && !practice.admins.includes(user.userId)) {
+      throw new Error('You are not authorized to update this practice');
+    }
+    practice.marketingInformation = {
+      description: dto.description,
+      icd10: dto.icd10,
+      additionalTherapyTopics: dto.additionalTherapyTopics ?? '',
+      additionalAddresses: dto.additionalAddresses ?? [],
+      ratings: [],
+    };
+
+    return practice.save();
+  }
+
+  async addRating(id: string, dto: AddRatingDto, user: AuthUser) {
+    const practice = await this.practiceModel.findById(id);
+    // TODO: find therapy, check if user was part of it, and save to db
+    console.log(user.userId);
+    /**practice.marketingInformation.ratings.push({
+      stars: dto.stars,
+      therapy: null,
+    });
+
+    const p = await practice.save();**/
+
+    const p = await this.practiceModel.updateOne(
+      { _id: id },
+      {
+        $push: {
+          'marketingInformation.ratings': {
+            stars: dto.stars,
+            therapy: null,
+          },
+        },
+      },
+    );
+
+    console.log(p);
+
+    return practice.meanRating;
   }
 
   remove(id: string) {

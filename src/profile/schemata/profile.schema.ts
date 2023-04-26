@@ -81,6 +81,10 @@ export class Address {
   @ApiProperty()
   @Prop({ type: () => GeoLocation, index: '2dsphere' })
   location: GeoLocation;
+
+  @ApiPropertyOptional()
+  @Prop({ nullable: true })
+  label?: string;
 }
 
 @Schema({ timestamps: true })
