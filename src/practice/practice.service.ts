@@ -59,13 +59,17 @@ export class PracticeService {
     return this.practiceModel.create(practice);
   }
 
-  findAll() {
-    return this.practiceModel.find();
+  async findAll() {
+    return (await this.practiceModel.find()).map((p) =>
+      p.toObject({ virtuals: true }),
+    );
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     // if patient is in therapy at this practice, allow it
-    return this.practiceModel.findById(id).populate('admins');
+    return (await this.practiceModel.findById(id).populate('admins')).toObject({
+      virtuals: true,
+    });
   }
 
   findByPractitioner(practitionerId: string) {
