@@ -3,5 +3,8 @@
   "sourceRoot": "src",
   "assets": [
     { "include": "**/*.json", "watchAssets": true }
-  ]
+  ],
+  "compilerOptions": {
+    "plugins": ["@nestjs/swagger"]
+  }
 }

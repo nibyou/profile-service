@@ -3,12 +3,17 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { PracticeService } from './practice.service';
-import { CreatePracticeDto } from './dto/create-practice.dto';
+import {
+  CreateMultiplePracticesDto,
+  CreateMultiplePracticesReturnDto,
+  CreatePracticeDto,
+} from './dto/create-practice.dto';
 import {
   AddRatingDto,
   UpdatePracticeAddAdminDto,
@@ -65,6 +70,21 @@ export class PracticeController {
     @AuthenticatedUser() user: AuthUser,
   ) {
     return this.practiceService.create(createPracticeDto, user);
+  }
+
+  @CreateRequest({
+    description: 'The practices have been successfully created',
+    operationId: 'createPractices',
+    path: '/multiple',
+    returnType: CreateMultiplePracticesReturnDto,
+    roles: [RealmRoles.ADMIN],
+    summary: 'Create multiple practices',
+  })
+  createAll(@Body() dto: CreateMultiplePracticesDto) {
+    console.log(Array.isArray(dto.practices), dto.practices.length);
+    if (dto?.practices?.length > 1000)
+      throw new HttpException({ message: 'Length should be <= 1000' }, 400);
+    return this.practiceService.createMultiple(dto.practices);
   }
 
   @Get()

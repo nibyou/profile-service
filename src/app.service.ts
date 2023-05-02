@@ -58,7 +58,7 @@ export class AppService {
 
     return {
       upload,
-      download: `https://${process.env.S3_BASE_URL}/${bucketName}/${uid}.${fileExtension}`,
+      download: `${process.env.S3_DOWNLOAD_URL}/${bucketName}/${uid}.${fileExtension}`,
     } as S3UrlResponse;
   }
 }

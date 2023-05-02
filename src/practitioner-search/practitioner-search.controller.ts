@@ -20,7 +20,7 @@ export class Dist {
   @ApiProperty()
   location: GeoLocation;
 }
-export class PracticesNearYou extends Practice {
+export class PracticeNearYou extends Practice {
   @ApiProperty()
   dist: Dist;
 }
@@ -49,9 +49,8 @@ export class PractitionerSearchController {
     operationId: 'findNearPractices',
     roles: false,
     summary: '',
-    returnType: [PracticesNearYou],
+    returnType: [PracticeNearYou],
   })
-  @HttpCode(200)
   findNearPractices(@Body() dto: GetNearPracticesDto) {
     return this.practitionerSearchService.getGeoNear(
       dto.location,

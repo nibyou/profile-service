@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Practice } from '../schemata/practice.schema';
 
 export class CreatePracticeDto {
   @ApiProperty()
@@ -36,4 +37,14 @@ export class CreatePracticeDto {
 
   @ApiPropertyOptional()
   admins?: string[];
+}
+
+export class CreateMultiplePracticesDto {
+  @ApiProperty({ type: () => [CreatePracticeDto] })
+  practices: CreatePracticeDto[];
+}
+
+export class CreateMultiplePracticesReturnDto {
+  @ApiProperty({ type: () => [Practice] })
+  practices: Practice[];
 }

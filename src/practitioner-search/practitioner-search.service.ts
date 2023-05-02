@@ -9,6 +9,7 @@ import { Practice } from '../practice/schemata/practice.schema';
 import Fuse from 'fuse.js';
 import * as fs from 'node:fs/promises';
 import { Icd10SearchDto, ICD10SearchResult } from './dto/icd10-search.dto';
+import { PracticeNearYou } from './practitioner-search.controller';
 
 export type GL = { type: 'Point'; coordinates: [number, number] };
 
@@ -62,8 +63,13 @@ export class PractitionerSearchService {
       });
     }
 
-    console.log(pipeline);
-    return this.practiceModel.aggregate(pipeline);
+    const res = await this.practiceModel.aggregate(pipeline);
+    return res.map((p) => {
+      const practice = p as unknown as PracticeNearYou;
+      practice.meanRating = calcMeanRating(practice);
+      console.log('meanRating:', practice.meanRating);
+      return practice;
+    });
   }
 
   async fuzzySearchICD10(
@@ -97,4 +103,12 @@ export class PractitionerSearchService {
       results: fuse.search(search).slice(0, limit) as ICD10SearchResult[],
     };
   }
+}
+
+function calcMeanRating(practice: Practice) {
+  if (practice.marketingInformation == null) return 0;
+  if (practice.marketingInformation.ratings.length === 0) return 0;
+  const ratings = practice.marketingInformation.ratings;
+  const sum = ratings.reduce((acc, cv) => acc + cv.stars, 0);
+  return sum / ratings.length;
 }

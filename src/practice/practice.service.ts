@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePracticeDto } from './dto/create-practice.dto';
+import {
+  CreateMultiplePracticesReturnDto,
+  CreatePracticeDto,
+} from './dto/create-practice.dto';
 import {
   AddRatingDto,
   UpdatePracticeAddAdminDto,
@@ -57,6 +60,45 @@ export class PracticeService {
     };
 
     return this.practiceModel.create(practice);
+  }
+
+  async createMultiple(dto: CreatePracticeDto[]) {
+    const models = await Promise.all(
+      dto.map(async (p) => {
+        const address: Address = {
+          street: p.street,
+          city: p.city,
+          country: p.country,
+          zipCode: p.zipCode,
+          houseNumber: p.houseNumber,
+          location: null,
+          label: PracticeAddressTypes.MAIN,
+        };
+
+        const geoLocation = await PracticeService.getGeoLocation(
+          `${address.street},${address.houseNumber},${address.zipCode},${address.city}`,
+        );
+
+        address.location = {
+          type: 'Point',
+          coordinates: [geoLocation.lat, geoLocation.lon],
+        };
+
+        return {
+          name: p.name,
+          address: address,
+          email: p.email,
+          mobileNumber: p.mobileNumber,
+          website: p.website,
+          logo: p.logo,
+          admins: p.admins,
+        } as Partial<Practice>;
+      }),
+    );
+
+    return {
+      practices: await this.practiceModel.insertMany(models),
+    };
   }
 
   async findAll() {
@@ -254,7 +296,17 @@ export class PracticeService {
     const response = await axios.get(
       `https://geocode.maps.co/search?q=${address}`,
     );
+    if (response.status !== 200) {
+      console.log(response.data);
+      throw new Error('Could not get geo location');
+    }
     const json = response.data;
+    if (json.length === 0) {
+      return {
+        lat: 0,
+        lon: 0,
+      };
+    }
     const lat = parseFloat(json[0].lat);
     const lon = parseFloat(json[0].lon);
     return {
